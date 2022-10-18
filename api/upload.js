@@ -1,7 +1,5 @@
 import PDFParser from "pdf2json";
 import multer from "multer";
-import cors from "cors";
-
 import express from "express";
 
 import {
@@ -11,17 +9,13 @@ import {
   AnsweKey,
 } from "./libs/index.js";
 
-const app = express();
-
-app.use(express.json());
-
-app.use(cors({ origin: "*" }));
+const router = express.Router();
 
 const storage = multer.memoryStorage();
 
 const upload = multer({ storage: storage }).single("files");
 
-app.post("/upload", (req, res) => {
+router.post("/", (req, res) => {
   upload(req, res, async (err) => {
     try {
       allowedOrigins(req, res);
@@ -72,6 +66,4 @@ app.post("/upload", (req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 3333;
-
-app.listen(PORT, () => console.log(`online server at the door ${PORT} ✅✅⚠️`));
+export default router;
