@@ -9,6 +9,10 @@ import {
   AnsweKey,
 } from "./libs/index.js";
 
+import dotenv from "dotenv"; // for .env file to store secret keys
+
+dotenv.config();
+
 const router = express.Router();
 
 const storage = multer.memoryStorage();
@@ -19,6 +23,14 @@ router.post("/", (req, res) => {
   upload(req, res, async (err) => {
     try {
       allowedOrigins(req, res);
+
+      const apiKey = req.headers["api-key"];
+
+      if (apiKey !== process.env.API_KEY) {
+        return res.status(401).json({
+          message: "Unauthorized ❌",
+        });
+      }
 
       const { year } = req.query;
 
