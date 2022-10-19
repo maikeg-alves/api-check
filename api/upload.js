@@ -24,14 +24,6 @@ router.post("/", (req, res) => {
     try {
       allowedOrigins(req, res);
 
-      const apiKey = req.headers["api-key"];
-
-      if (apiKey !== process.env.API_KEY) {
-        return res.status(401).json({
-          message: "Unauthorized ❌",
-        });
-      }
-
       const { year } = req.query;
 
       console.log(year);
