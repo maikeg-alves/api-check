@@ -29,6 +29,11 @@ const formattingAnswerKeyUser = (array) => {
     "IV",
     "(2)",
     "(3)",
+    "QUESTOALTERNATIVA",
+    "QUESTÃO",
+    "ALTERNATIVA",
+    "questão",
+    "alternativa",
   ];
 
   const respostas = [];
@@ -40,65 +45,48 @@ const formattingAnswerKeyUser = (array) => {
     }
   }
 
-  // separando respostas por prova e por questão
+  const value = [];
 
-  respostas.forEach((element) => {
+  respostas.map(async (element) => {
     if (element.length > 0) {
-      const number = element.match(/\d+/g); //✅
-
-      const letter = element.match(/[A-Z]+/g); //✅
-
-      const numberString = number ? number.join("") : ""; //✅
-
-      const letterString = letter ? letter.join("") : ""; //✅
-
-      const numberFilter = numberString.replace(/[^0-9]/g, ""); //✅
-
-      const letterFilter = letterString.replace(/[^a-z]/gi, ""); //✅
-
-      const letterFilterUpper = letterFilter.toUpperCase(); //✅
-
-      for (let i = 0; i < letterString.length; i++) {
-        if (numberString == "" || letterString == "") {
-          break;
+      const namberform = (element) => {
+        const n = element.match(/\d+/g); //✅
+        if (n !== null) {
+          return n;
         }
-        respostas.push({
-          number: numberFilter,
-          letter: letterFilterUpper[i],
-        });
+      };
+
+      const number = namberform(element);
+
+      const letter = element.match(/[a-zA-Z]/g); //✅
+
+      if (number !== undefined && letter !== undefined) {
+        const numberString = number ? number.join("") : ""; //✅
+
+        const letterString = letter ? letter.join("") : "X"; //
+
+        const numberFilter = numberString.replace(/[^0-9]/g, ""); //✅
+
+        const letterFilter = letterString.replace(/[^A-Z]/gi, "").toUpperCase(); //✅
+
+        for (let i = 0; i < letterFilter.length; i++) {
+          value.push({
+            number: numberFilter,
+            letter: letterFilter[i],
+          });
+        }
       }
     }
   });
 
-  const prova1 = respostas.slice(0, 30);
-  const prova2 = respostas.slice(30, 60);
-  const prova3 = respostas.slice(60, 90);
-  const prova4 = respostas.slice(90, 120);
+  const prova1 = value.slice(0, 30);
+  const prova2 = value.slice(30, 60);
+  const prova3 = value.slice(60, 90);
+  const prova4 = value.slice(90, 120);
 
-  const patientObject = [prova1, prova2, prova3, prova4];
+  const gabarito = [prova1, prova2, prova3, prova4];
 
-  const numberQuestions = patientObject.map((patient) => {
-    return patient.map((question) => {
-      return question.slice(0, -1);
-    });
-  });
-
-  const letterAnswers = patientObject.map((patient) => {
-    return patient.map((question) => {
-      return question.slice(-1);
-    });
-  });
-
-  const respostasObject = numberQuestions.map((patient, index) => {
-    return patient.map((question, index2) => {
-      return {
-        number: question,
-        letter: letterAnswers[index][index2],
-      };
-    });
-  });
-
-  return respostasObject;
+  return gabarito;
 };
 
 export default formattingAnswerKeyUser;

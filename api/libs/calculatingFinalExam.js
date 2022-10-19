@@ -56,8 +56,11 @@ const CalculatingFinalExam = (gabarito, respostas, yaer) => {
     for (let i = 0; i < 4; i++) {
       materias[4].acertostotais += materias[i].acertos.length;
       materias[4].errostotais += materias[i].erros.length;
+
       if (materias[i].acertos.length > 15) {
         materias[4].aprovadas.push(materias[i].name);
+      } else if (materias[i].erros === "X") {
+        materias[4].notapplied.push(materias[i].name);
       } else {
         materias[4].reprovadas.push(materias[i].name);
       }
